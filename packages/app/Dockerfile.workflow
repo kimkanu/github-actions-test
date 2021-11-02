@@ -1,4 +1,4 @@
-FROM common
+FROM keonwoo/test:default
 
 # Copy yarn packages
 WORKDIR /app

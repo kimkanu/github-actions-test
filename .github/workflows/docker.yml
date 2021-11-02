@@ -26,10 +26,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build the common container
-        run: |
-          docker build -t common -f Dockerfile.workflow .
-
       - name: Build containers
         run: docker-compose -f "docker-compose.test.yml" build
 
@@ -45,7 +41,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/
           fail_ci_if_error: true
-          path_to_write_report: ./coverage/codecov_report.txt
 
       - name: Stop containers
         if: always()
