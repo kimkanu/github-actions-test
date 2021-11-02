@@ -1,0 +1,9 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./packages/app/Dockerfile.workflow
+    command: ${CMD}
+    volumes:
+      - ./coverage/:/app/coverage/

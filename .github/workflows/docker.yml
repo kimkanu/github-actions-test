@@ -15,24 +15,35 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
-    steps:
+  steps:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Start containers
-      run: docker-compose -f "docker-compose.yml" up -d --build
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-    - name: Install node
-      uses: actions/setup-node@v1
+    - name: Build the common container
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_REPOSITORY }}:default -f Dockerfile.workflow .
+
+    - name: Build containers
+      run: docker-compose -f "docker-compose.test.yml" build
+
+    - name: Test 1 in `app`
+      run: CMD="yarn workspace app run test-1" docker-compose -f "docker-compose.test.yml" up app
+
+    - name: Test 2 in `app`
+      run: CMD="yarn workspace app run test-2" docker-compose -f "docker-compose.test.yml" up app
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
       with:
-        node-version: 14.x
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run tests
-      run: npm run test
+        token: ${{ secrets.CODECOV_TOKEN }}
+        directory: ./coverage/
+        fail_ci_if_error: true
+        path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true
 
     - name: Stop containers
       if: always()
-      run: docker-compose -f "docker-compose.yml" down
+      run: docker-compose -f "docker-compose.test.yml" down

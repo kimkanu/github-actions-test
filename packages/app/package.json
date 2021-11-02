@@ -1,0 +1,13 @@
+{
+  "name": "app",
+  "scripts": {
+    "test-1": "echo '> Test 1\n\n' && jest --coverageDirectory \"../../coverage/app/1/\" && ls ../..",
+    "test-2": "echo '> Test 2\n\n' && jest --coverageDirectory \"../../coverage/app/2/\""
+  },
+  "dependencies": {
+    "jest": "^27.3.1"
+  },
+  "jest": {
+    "collectCoverage": true
+  }
+}
