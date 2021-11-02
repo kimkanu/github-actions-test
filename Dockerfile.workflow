@@ -5,11 +5,8 @@ WORKDIR /app
 COPY ./.yarnrc.yml .
 COPY ./package.json .
 COPY ./.yarn/ ./.yarn/
+COPY ./yarn.lock .
+
+RUN ls /app/.yarn/cache
 
 RUN chown -R node:node .
-
-USER node
-
-RUN yarn set version berry
-RUN yarn install
-RUN yarn plugin import workspace-tools
