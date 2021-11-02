@@ -3,10 +3,10 @@ FROM node:lts
 # Copy yarn packages
 WORKDIR /app
 COPY ./.yarnrc.yml .
-COPY ./package.json .
 COPY ./.yarn/ ./.yarn/
 COPY ./yarn.lock .
 
-RUN ls /app/.yarn/cache
+COPY ./package.json .
+COPY ./packages/app/package.json ./packages/app/
 
 RUN chown -R node:node .
