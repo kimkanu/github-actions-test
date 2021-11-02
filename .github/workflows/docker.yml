@@ -28,7 +28,7 @@ jobs:
 
     - name: Build the common container
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_REPOSITORY }}:default -f Dockerfile.workflow .
+        docker build -t common -f Dockerfile.workflow .
 
     - name: Build containers
       run: docker-compose -f "docker-compose.test.yml" build
