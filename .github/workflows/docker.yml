@@ -20,11 +20,15 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Login to DockerHub Registry
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      run: echo ${#DOCKERHUB_PASSWORD} | docker login -u ${#DOCKERHUB_USERNAME} --password-stdin
 
     - name: Build the common container
-      run: |
-        docker build -t ${{ secrets.DOCKERHUB_REPOSITORY }}:default -f Dockerfile.workflow .
+      env:
+        DOCKERHUB_REPOSITORY: ${{ secrets.DOCKERHUB_REPOSITORY }}
+      run: docker build -t ${#DOCKERHUB_REPOSITORY} :default -f Dockerfile.workflow .
 
     - name: Build containers
       run: docker-compose -f "docker-compose.test.yml" build
@@ -36,9 +40,11 @@ jobs:
       run: CMD="yarn workspace app run test-2" docker-compose -f "docker-compose.test.yml" up app
 
     - name: Upload coverage to Codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       uses: codecov/codecov-action@v2
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${#CODECOV_TOKEN}
         directory: ./coverage/
         fail_ci_if_error: true
         path_to_write_report: ./coverage/codecov_report.txt
