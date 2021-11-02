@@ -1,7 +1,7 @@
 {
   "name": "app",
   "scripts": {
-    "test-1": "mkdir -p ../../coverage/app/1 && ls ../../coverage/app/1 && echo '> Test 1\n\n' && jest --coverageDirectory \"../../coverage/app/1/\" && ls ../..",
+    "test-1": "whoami && sudo mkdir -p ../../coverage/app/1 && ls ../../coverage/app/1 && echo '> Test 1\n\n' && jest --coverageDirectory \"../../coverage/app/1/\" && ls ../..",
     "test-2": "echo '> Test 2\n\n' && jest --coverageDirectory \"../../coverage/app/2/\""
   },
   "dependencies": {
