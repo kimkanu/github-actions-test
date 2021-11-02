@@ -17,37 +17,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v1
 
-    - name: Login to DockerHub Registry
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build the common container
-      run: |
-        docker build -t common -f Dockerfile.workflow .
+      - name: Build the common container
+        run: |
+          docker build -t common -f Dockerfile.workflow .
 
-    - name: Build containers
-      run: docker-compose -f "docker-compose.test.yml" build
+      - name: Build containers
+        run: docker-compose -f "docker-compose.test.yml" build
 
-    - name: Test 1 in `app`
-      run: CMD="yarn workspace app run test-1" docker-compose -f "docker-compose.test.yml" up app
+      - name: Test 1 in `app`
+        run: sudo CMD="yarn workspace app run test-1" docker-compose -f "docker-compose.test.yml" up app
 
-    - name: Test 2 in `app`
-      run: CMD="yarn workspace app run test-2" docker-compose -f "docker-compose.test.yml" up app
+      - name: Test 2 in `app`
+        run: sudo CMD="yarn workspace app run test-2" docker-compose -f "docker-compose.test.yml" up app
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        directory: ./coverage/
-        fail_ci_if_error: true
-        path_to_write_report: ./coverage/codecov_report.txt
-        verbose: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/
+          fail_ci_if_error: true
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
 
-    - name: Stop containers
-      if: always()
-      run: docker-compose -f "docker-compose.test.yml" down
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.test.yml" down

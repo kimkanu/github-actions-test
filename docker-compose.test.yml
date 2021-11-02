@@ -6,4 +6,4 @@ services:
       dockerfile: ./packages/app/Dockerfile.workflow
     command: ${CMD}
     volumes:
-      - ./coverage/:/app/coverage/
+      - ./coverage/:/app/coverage/:Z
